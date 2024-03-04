@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+//Validates email format
 var emailValidation = function(email) {
   var regex = /^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/
   return regex.test(email)
@@ -8,23 +9,14 @@ var emailValidation = function(email) {
 const userSchema = new mongoose.Schema({
   username: { type: String, unique: true, required: true,  trim: true},
   email: { type: String, required: true, unique: true, validate: [emailValidation, "Please use a valid email address"]},
-  thoughts: [
-
-  ],
-  friends: [
-
-  ]
+  thoughts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Thought'}],
+  friends: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User'}]
 });
-
-//TODO: Schema Settings
-
-// Create a virtual called friendCount that retrieves the length of the user's friends array field on query
 
 userSchema.virtual('friendCount')
 .get(function () {
   return this.friends.length
 })
-
 
 const User = mongoose.model('user', userSchema);
 
