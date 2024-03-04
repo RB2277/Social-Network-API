@@ -6,7 +6,7 @@ var emailValidation = function(email) {
 }
 
 const userSchema = new mongoose.Schema({
-  username: { type: String, required: true, unique: true, trim: true},
+  username: { type: String, unique: true, required: true,  trim: true},
   email: { type: String, required: true, unique: true, validate: [emailValidation, "Please use a valid email address"]},
   thoughts: [
 
@@ -19,6 +19,11 @@ const userSchema = new mongoose.Schema({
 //TODO: Schema Settings
 
 // Create a virtual called friendCount that retrieves the length of the user's friends array field on query
+
+userSchema.virtual('friendCount')
+.get(function () {
+  return this.friends.length
+})
 
 
 const User = mongoose.model('user', userSchema);
