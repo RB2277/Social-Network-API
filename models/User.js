@@ -4,7 +4,6 @@ const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true, trim: true},
   //I still need to setup the email address validation
   email: { type: String, required: true, unique: true},
-  lastAccessed: { type: Date, default: Date.now },
   thoughts: [
 
   ],
