@@ -14,12 +14,13 @@ async getUsers(req, res) {
 
 async getSingleUser(req, res) {
     try {
-        const user = await User.findOne({_id: req.params._id})
-        .populate('thoghts', 'friends')
-
+        const user = await User.findById(req.params.id)
+        //I still need to add population for thoughts
+        .populate('friends')
         if(!user) {
             return res.status(404).json({message: 'No user with that ID exists'})
         }
+        res.json({user})
     } catch (err) {
         res.status(500).json(err)
     }
@@ -36,37 +37,26 @@ async createUser(req, res) {
 
 async editUser(req, res) {
     try {
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, update, {new: true})
+        const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {new: true})
         res.json(updatedUser)
     } catch (err) {
         res.status(500).json(err)
     }
 },
 
+async deleteUser(req, res) {
+    try {
+        const deletedUser = await User.findOneAndDelete({_id: req.params.id})
+        if(!deletedUser){
+            return res.status(404).json({message: 'No user with that ID exists'})
+        }
+        res.json({message: 'User has been deleted'})
+    } catch (err) {
+        res.status(500).json(err)
+    }
+}
 
 
 
 }
 
-
-/*
-API Routes
-/api/users
-
-GET all users
-
-GET a single user by its _id and populated thought and friend data
-
-POST a new user:
-
-// example data
-{
-  "username": "lernantino",
-  "email": "lernantino@gmail.com"
-}
-PUT to update a user by its _id
-
-DELETE to remove user by its _id
-
-BONUS: Remove a user's associated thoughts when deleted.
-*/
