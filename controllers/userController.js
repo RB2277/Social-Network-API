@@ -1,4 +1,4 @@
-const { User } = require('../models')
+const User = require('../models/User')
 
 module.exports = {
 
@@ -36,7 +36,7 @@ async createUser(req, res) {
 
 async editUser(req, res) {
     try {
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, update)
+        const updatedUser = await User.findByIdAndUpdate(req.params.id, update, {new: true})
         res.json(updatedUser)
     } catch (err) {
         res.status(500).json(err)
