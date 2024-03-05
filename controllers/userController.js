@@ -75,17 +75,17 @@ async addFriend(req, res) {
 
 async removeFriend(req, res) {
     try{
-    const { thoughtId, reactionId } = req.params
-    console.log(thoughtId)
-    console.log(reactionId)
+        const { userId, friendId } = req.params
 
-    const thought = await Thought.findById(thoughtId)
-    if(!thought){
-        return res.status(404).json({message: 'No thought with that ID exists'})
+
+    const user = await User.findById(userId)
+    console.log(user)
+    if(!user){
+        return res.status(404).json({message: 'No user with that ID exists'})
     }
-    thought.reactions = thought.reactions.filter(reaction => !reaction.reactionID.equals(reactionId))
-   await thought.save()
-   res.json({message: "Your reaction has been removed", thought})
+    user.friends = user.friends.filter(friend => !friend._id.equals(friendId))
+   await user.save()
+   res.json({message: "Your friend has been removed", user})
     } catch(err) {
         res.status(500).json(err)
     }
