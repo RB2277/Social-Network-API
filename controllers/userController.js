@@ -5,7 +5,8 @@ module.exports = {
 //Get all users
 async getUsers(req, res) {
     try {
-        const users = await User.find();
+        const users = await User.find()
+        .populate('friends').populate('thoughts')  
         res.json(users)
     } catch (err) {
         res.status(500).json(err)
@@ -15,8 +16,7 @@ async getUsers(req, res) {
 async getSingleUser(req, res) {
     try {
         const user = await User.findById(req.params.id)
-        //I still need to add population for thoughts
-        .populate('friends')
+        .populate('friends').populate('thoughts')
         if(!user) {
             return res.status(404).json({message: 'No user with that ID exists'})
         }
