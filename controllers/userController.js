@@ -54,6 +54,41 @@ async deleteUser(req, res) {
     } catch (err) {
         res.status(500).json(err)
     }
+},
+
+async addFriend(req, res) {
+    try {
+        const { userId, friendId } = req.params
+    const user = await User.findById(userId)
+    if(!user){
+        return res.status(404).json({message: 'No user with that ID exists'})
+    }
+
+
+    user.friends.push(friendId)
+    await user.save()
+    res.json({message: "Friend added!", user})
+    } catch(err) {
+        res.status(500).json(err)
+    }
+}, 
+
+async removeFriend(req, res) {
+    try{
+        const { userId, friendId } = req.params
+
+
+    const user = await User.findById(userId)
+    console.log(user)
+    if(!user){
+        return res.status(404).json({message: 'No user with that ID exists'})
+    }
+    user.friends = user.friends.filter(friend => !friend._id.equals(friendId))
+   await user.save()
+   res.json({message: "Your friend has been removed", user})
+    } catch(err) {
+        res.status(500).json(err)
+    }
 }
 
 
